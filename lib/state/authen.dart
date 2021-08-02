@@ -26,9 +26,7 @@ class _AuthenState extends State<Authen> {
               buildImage(size),
               buildAppName(),
               buildUser(size),
-              buildPassword(
-                size,
-              )
+              buildPassword(size),
             ],
           ),
         ),
