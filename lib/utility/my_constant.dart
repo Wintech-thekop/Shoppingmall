@@ -29,15 +29,22 @@ class MyConstant {
         fontWeight: FontWeight.bold,
       );
 
-      TextStyle h2Style() => TextStyle(
+  TextStyle h2Style() => TextStyle(
         fontSize: 18,
         color: dark,
         fontWeight: FontWeight.w700,
       );
 
-      TextStyle h3Style() => TextStyle(
+  TextStyle h3Style() => TextStyle(
         fontSize: 14,
         color: dark,
         fontWeight: FontWeight.normal,
+      );
+
+  ButtonStyle myButtonStyle() => ElevatedButton.styleFrom(
+        primary: MyConstant.primary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
       );
 }

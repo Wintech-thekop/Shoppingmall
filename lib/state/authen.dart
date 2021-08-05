@@ -27,10 +27,28 @@ class _AuthenState extends State<Authen> {
               buildAppName(),
               buildUser(size),
               buildPassword(size),
+              biuldLogin(size),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Row biuldLogin(double size) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: EdgeInsets.symmetric(vertical: 16),
+          width: size * 0.6,
+          child: ElevatedButton(
+            style: MyConstant().myButtonStyle(),
+            onPressed: () {},
+            child: Text('Login'),
+          ),
+        ),
+      ],
     );
   }
 
