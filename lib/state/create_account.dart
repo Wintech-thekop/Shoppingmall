@@ -39,37 +39,41 @@ class _CreateAccountState extends State<CreateAccount> {
             buildPassword(size),
             buildTitle('รูปภาพ'),
             buildSubTitle(),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.add_a_photo,
-                    size: 36,
-                    color: MyConstant.dark,
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 16),
-                  width: size * 0.4,
-                  child: ShowImage(path: MyConstant.avatar),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.add_photo_alternate,
-                    size: 36,
-                    color: MyConstant.dark,
-                  ),
-                ),
-              ],
-            ),
+            buildAvatar(size),
           ],
         ),
       ),
     );
+  }
+
+  Row buildAvatar(double size) {
+    return Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.add_a_photo,
+                  size: 36,
+                  color: MyConstant.dark,
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 16),
+                width: size * 0.4,
+                child: ShowImage(path: MyConstant.avatar),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.add_photo_alternate,
+                  size: 36,
+                  color: MyConstant.dark,
+                ),
+              ),
+            ],
+          );
   }
 
   ShowTitle buildSubTitle() {
