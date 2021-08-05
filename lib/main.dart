@@ -3,7 +3,7 @@ import 'package:shoppingmall/state/authen.dart';
 import 'package:shoppingmall/state/buyer_service.dart';
 import 'package:shoppingmall/state/create_account.dart';
 import 'package:shoppingmall/state/rider_service.dart';
-import 'package:shoppingmall/state/saler_service.dart';
+import 'package:shoppingmall/state/seller_service.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
 
 final Map<String, WidgetBuilder> map = {
@@ -11,7 +11,7 @@ final Map<String, WidgetBuilder> map = {
   '/createAccount': (BuildContext context) => CreateAccount(),
   '/buyerService': (BuildContext context) => BuyerService(),
   '/riderService': (BuildContext context) => RiderService(),
-  '/salerService': (BuildContext context) => SalerService(),
+  '/sellerService': (BuildContext context) => SellerService(),
 };
 
 String? initialRoute;
