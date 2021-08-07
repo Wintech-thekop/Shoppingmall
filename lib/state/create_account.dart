@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
 import 'package:shoppingmall/utility/my_dialog.dart';
 import 'package:shoppingmall/widgets/show_image.dart';
+import 'package:shoppingmall/widgets/show_progress.dart';
 import 'package:shoppingmall/widgets/show_title.dart';
 
 class CreateAccount extends StatefulWidget {
@@ -19,12 +20,13 @@ class CreateAccount extends StatefulWidget {
 class _CreateAccountState extends State<CreateAccount> {
   String? typeUser;
   File? file;
+  double? lat, lng;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    findLaLng();
+    checkPermission();
   }
 
   @override
@@ -55,6 +57,8 @@ class _CreateAccountState extends State<CreateAccount> {
             buildTitle('รูปภาพ'),
             buildSubTitle(),
             buildAvatar(size),
+            buildTitle('แสดงพิกัดที่คุณอยู่'),
+            buildMap(),
           ],
         ),
       ),
@@ -62,6 +66,33 @@ class _CreateAccountState extends State<CreateAccount> {
   }
 
   Future<Null> findLaLng() async {
+    Position? position = await findPosition();
+    setState(() {
+      //lat = position!.latitude;
+      //lng = position.longitude;
+      print('Lat = $lat, Lng = $lng');
+    });
+  }
+
+  Future<Position?> findPosition() async {
+    Position position;
+    try {
+      position = await Geolocator.getCurrentPosition();
+      return position;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Widget buildMap() => Container(
+        width: double.infinity,
+        height: 300,
+        child: lat == null
+            ? ShowProgress()
+            : Text('Lat = $lat, Lng = $lng'),
+      );
+
+  Future<Null> checkPermission() async {
     bool locationService;
     LocationPermission locationPermission;
 
@@ -76,6 +107,7 @@ class _CreateAccountState extends State<CreateAccount> {
               'กรุณาแชร์ Location Service ด้วยค่ะ');
         } else {
           //Find LaLng
+          findLaLng();
         }
       } else {
         if (locationPermission == LocationPermission.deniedForever) {
@@ -83,12 +115,13 @@ class _CreateAccountState extends State<CreateAccount> {
               'กรุณาแชร์ Location Service ด้วยค่ะ');
         } else {
           //Find LaLng
+          findLaLng();
         }
       }
     } else {
       print('Service Location Close');
       MyDialog().alertLocationService(context, 'Location Service ปิดอยู่ ?',
-              'กรุณาเปิด Location Service ด้วยค่ะ');
+          'กรุณาเปิด Location Service ด้วยค่ะ');
     }
   }
 
