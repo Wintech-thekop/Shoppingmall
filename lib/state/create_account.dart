@@ -2,8 +2,10 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
+import 'package:shoppingmall/utility/my_dialog.dart';
 import 'package:shoppingmall/widgets/show_image.dart';
 import 'package:shoppingmall/widgets/show_title.dart';
 
@@ -17,6 +19,13 @@ class CreateAccount extends StatefulWidget {
 class _CreateAccountState extends State<CreateAccount> {
   String? typeUser;
   File? file;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    findLaLng();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +59,37 @@ class _CreateAccountState extends State<CreateAccount> {
         ),
       ),
     );
+  }
+
+  Future<Null> findLaLng() async {
+    bool locationService;
+    LocationPermission locationPermission;
+
+    locationService = await Geolocator.isLocationServiceEnabled();
+    if (locationService) {
+      print('Service Location Open');
+      locationPermission = await Geolocator.checkPermission();
+      if (locationPermission == LocationPermission.denied) {
+        locationPermission = await Geolocator.requestPermission();
+        if (locationPermission == LocationPermission.deniedForever) {
+          MyDialog().alertLocationService(context, 'ไม่อนุญาตแชร์ Location',
+              'กรุณาแชร์ Location Service ด้วยค่ะ');
+        } else {
+          //Find LaLng
+        }
+      } else {
+        if (locationPermission == LocationPermission.deniedForever) {
+          MyDialog().alertLocationService(context, 'ไม่อนุญาตแชร์ Location',
+              'กรุณาแชร์ Location Service ด้วยค่ะ');
+        } else {
+          //Find LaLng
+        }
+      }
+    } else {
+      print('Service Location Close');
+      MyDialog().alertLocationService(context, 'Location Service ปิดอยู่ ?',
+              'กรุณาเปิด Location Service ด้วยค่ะ');
+    }
   }
 
   Future<Null> chooseImage(ImageSource source) async {
