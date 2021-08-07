@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
 import 'package:shoppingmall/utility/my_dialog.dart';
@@ -68,8 +69,8 @@ class _CreateAccountState extends State<CreateAccount> {
   Future<Null> findLaLng() async {
     Position? position = await findPosition();
     setState(() {
-      //lat = position!.latitude;
-      //lng = position.longitude;
+      lat = position!.latitude;
+      lng = position.longitude;
       print('Lat = $lat, Lng = $lng');
     });
   }
@@ -84,12 +85,28 @@ class _CreateAccountState extends State<CreateAccount> {
     }
   }
 
+  Set<Marker> setMarker() => <Marker>[
+        Marker(
+          markerId: MarkerId('id'),
+          position: LatLng(lat!, lng!),
+          infoWindow: InfoWindow(
+              title: 'คุณอยู่ที่นี่', snippet: 'Lat = $lat, Lng = $lng'),
+        ),
+      ].toSet();
+
   Widget buildMap() => Container(
         width: double.infinity,
         height: 300,
         child: lat == null
             ? ShowProgress()
-            : Text('Lat = $lat, Lng = $lng'),
+            : GoogleMap(
+                initialCameraPosition: CameraPosition(
+                  target: LatLng(lat!, lng!),
+                  zoom: 16,
+                ),
+                onMapCreated: (controller) {},
+                markers: setMarker(),
+              ),
       );
 
   Future<Null> checkPermission() async {
