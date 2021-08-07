@@ -36,11 +36,9 @@ class _CreateAccountState extends State<CreateAccount> {
     double size = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        actions: [IconButton(onPressed: () {
-          if (formKey.currentState!.validate()) {
-            
-          }
-        }, icon: Icon(Icons.cloud_upload),),],
+        actions: [
+          buildCreateNewAccount(),
+        ],
         title: Text('Create New Account'),
         backgroundColor: MyConstant.primary,
       ),
@@ -49,29 +47,47 @@ class _CreateAccountState extends State<CreateAccount> {
         behavior: HitTestBehavior.opaque,
         child: Form(
           key: formKey,
-          child: ListView(
-            padding: EdgeInsets.all(16),
-            children: [
-              buildTitle('ข้อมูลทั่วไป :'),
-              buildName(size),
-              buildTitle('ชนิดข้อมูลของ User :'),
-              buildRadioBuyer(size),
-              buildRadioSeller(size),
-              buildRadioRider(size),
-              buildTitle('ข้อมูลพื้นฐาน :'),
-              buildAddress(size),
-              buildPhone(size),
-              buildUser(size),
-              buildPassword(size),
-              buildTitle('รูปภาพ'),
-              buildSubTitle(),
-              buildAvatar(size),
-              buildTitle('แสดงพิกัดที่คุณอยู่'),
-              buildMap(),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                buildTitle('ข้อมูลทั่วไป :'),
+                buildName(size),
+                buildTitle('ชนิดข้อมูลของ User :'),
+                buildRadioBuyer(size),
+                buildRadioSeller(size),
+                buildRadioRider(size),
+                buildTitle('ข้อมูลพื้นฐาน :'),
+                buildAddress(size),
+                buildPhone(size),
+                buildUser(size),
+                buildPassword(size),
+                buildTitle('รูปภาพ'),
+                buildSubTitle(),
+                buildAvatar(size),
+                buildTitle('แสดงพิกัดที่คุณอยู่'),
+                buildMap(),
+              ],
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  IconButton buildCreateNewAccount() {
+    return IconButton(
+      onPressed: () {
+        if (formKey.currentState!.validate()) {
+          if (typeUser == null) {
+            print('Not select Type User');
+            MyDialog().normalDialog(context, 'ไม่ได้เลือก Type User',
+                'กรุณาเลือก Type User ด้วยค่ะ');
+          } else {
+            print('Insert to Database');
+          }
+        }
+      },
+      icon: Icon(Icons.cloud_upload),
     );
   }
 
@@ -366,6 +382,7 @@ class _CreateAccountState extends State<CreateAccount> {
           margin: EdgeInsets.only(top: 16),
           width: size * 0.6,
           child: TextFormField(
+            keyboardType: TextInputType.phone,
             validator: (value) {
               if (value!.isEmpty) {
                 return 'กรุณากรอก Phone ด้วยค่ะ';
