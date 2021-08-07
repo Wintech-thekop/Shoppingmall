@@ -5,6 +5,8 @@
    <application
         android:label="shoppingmall"
         android:icon="@mipmap/ic_launcher">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyBELZa0L2e7MsCc4WInlg0wjdB0dGyEkqE"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
