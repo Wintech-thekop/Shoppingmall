@@ -110,7 +110,7 @@ class _CreateAccountState extends State<CreateAccount> {
         'Name = $name, Address = $address, phone = $phone, user = $user, password = $password');
         String path =
         '${MyConstant.domain}/shoppingmall/getUserWhereUser.php?isAdd=true&user=$user';
-    await Dio().get(path).then((value) => print(' ####value ==>> $value'));
+    await Dio().get(path).then((value) => print('####value ==>> $value'));
   }
 
   Future<Null> findLaLng() async {
