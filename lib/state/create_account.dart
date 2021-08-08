@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -23,6 +24,11 @@ class _CreateAccountState extends State<CreateAccount> {
   File? file;
   double? lat, lng;
   final formKey = GlobalKey<FormState>();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController userController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @override
   void initState() {
@@ -84,11 +90,27 @@ class _CreateAccountState extends State<CreateAccount> {
                 'กรุณาเลือก Type User ด้วยค่ะ');
           } else {
             print('Insert to Database');
+            insertDataAndImage();
           }
         }
       },
       icon: Icon(Icons.cloud_upload),
     );
+  }
+
+  Future<Null> insertDataAndImage() async {
+    
+    String name = nameController.text;
+    String address = addressController.text;
+    String phone = phoneController.text;
+    String user = userController.text;
+    String password = passwordController.text;
+
+    print(
+        'Name = $name, Address = $address, phone = $phone, user = $user, password = $password');
+        String path =
+        '${MyConstant.domain}shoppingmall/getUserWhereUser.php?isAdd=true&user=$user';
+    await Dio().get(path).then((value) => print(' ####value ==>> $value'));
   }
 
   Future<Null> findLaLng() async {
@@ -308,6 +330,7 @@ class _CreateAccountState extends State<CreateAccount> {
           margin: EdgeInsets.only(top: 16),
           width: size * 0.6,
           child: TextFormField(
+            controller: nameController,
             validator: (value) {
               if (value!.isEmpty) {
                 return 'กรุณากรอก Name ด้วยค่ะ';
@@ -343,6 +366,7 @@ class _CreateAccountState extends State<CreateAccount> {
           margin: EdgeInsets.only(top: 16),
           width: size * 0.6,
           child: TextFormField(
+            controller: addressController,
             validator: (value) {
               if (value!.isEmpty) {
                 return 'กรุณากรอก Address ด้วยค่ะ';
@@ -382,6 +406,7 @@ class _CreateAccountState extends State<CreateAccount> {
           margin: EdgeInsets.only(top: 16),
           width: size * 0.6,
           child: TextFormField(
+            controller: phoneController,
             keyboardType: TextInputType.phone,
             validator: (value) {
               if (value!.isEmpty) {
@@ -418,6 +443,7 @@ class _CreateAccountState extends State<CreateAccount> {
           margin: EdgeInsets.only(top: 16),
           width: size * 0.6,
           child: TextFormField(
+            controller: userController,
             validator: (value) {
               if (value!.isEmpty) {
                 return 'กรุณากรอก User ด้วยค่ะ';
@@ -453,6 +479,7 @@ class _CreateAccountState extends State<CreateAccount> {
           margin: EdgeInsets.only(top: 16),
           width: size * 0.6,
           child: TextFormField(
+            controller: passwordController,
             validator: (value) {
               if (value!.isEmpty) {
                 return 'กรุณากรอก Password ด้วยค่ะ';
