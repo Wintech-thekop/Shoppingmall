@@ -109,7 +109,7 @@ class _CreateAccountState extends State<CreateAccount> {
     print(
         'Name = $name, Address = $address, phone = $phone, user = $user, password = $password');
         String path =
-        '${MyConstant.domain}shoppingmall/getUserWhereUser.php?isAdd=true&user=$user';
+        '${MyConstant.domain}/shoppingmall/getUserWhereUser.php?isAdd=true&user=$user';
     await Dio().get(path).then((value) => print(' ####value ==>> $value'));
   }
 
