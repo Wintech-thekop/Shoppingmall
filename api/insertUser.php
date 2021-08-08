@@ -39,7 +39,7 @@ if (isset($_GET)) {
 			echo "false";
 		}
 
-	} else echo "Welcome Master UNG";
+	} else echo "Hello Wintech_Thekop";
    
 }
 	mysqli_close($link);
