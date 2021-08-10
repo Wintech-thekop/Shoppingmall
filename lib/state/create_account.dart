@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:dio/dio.dart';
@@ -23,6 +24,7 @@ class _CreateAccountState extends State<CreateAccount> {
   String? typeUser;
   File? file;
   double? lat, lng;
+  String avatar = '';
   final formKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
   TextEditingController addressController = TextEditingController();
@@ -99,7 +101,6 @@ class _CreateAccountState extends State<CreateAccount> {
   }
 
   Future<Null> insertDataAndImage() async {
-    
     String name = nameController.text;
     String address = addressController.text;
     String phone = phoneController.text;
@@ -108,9 +109,38 @@ class _CreateAccountState extends State<CreateAccount> {
 
     print(
         'Name = $name, Address = $address, phone = $phone, user = $user, password = $password');
-        String path =
+    String path =
         '${MyConstant.domain}/shoppingmall/getUserWhereUser.php?isAdd=true&user=$user';
-    await Dio().get(path).then((value) => print('####value ==>> $value'));
+    await Dio().get(path).then((value) async{
+      print('####value ==>> $value');
+      if (value.toString() == 'null') {
+        print('This User OK');
+        if (file == null) {
+          // No Avatar
+          processInsertSQL();
+        } else {
+          // Have Avatar
+          print('#### Process Upload Avatar');
+          String apiSaveAvatar =
+              '${MyConstant.domain}/shoppingmall/saveAvatar.php';
+          int i = Random().nextInt(100000);
+          String nameAvatar = 'avatar$i.jpg';
+           Map<String, dynamic> map = Map();
+          map['file'] =
+              await MultipartFile.fromFile(file!.path, filename: nameAvatar);
+          FormData data = FormData.fromMap(map);
+          await Dio().post(apiSaveAvatar, data: data).then((value) {
+            avatar = '/shoppingmall/avatar/$nameAvatar';}
+        );}
+      } else {
+        MyDialog().normalDialog(
+            context, 'This User not available', 'Please change new User');
+      }
+    });
+  }
+
+  Future<Null> processInsertSQL() async {
+    print('===>>> InsertMySQL OK');
   }
 
   Future<Null> findLaLng() async {
@@ -191,7 +221,7 @@ class _CreateAccountState extends State<CreateAccount> {
 
   Future<Null> chooseImage(ImageSource source) async {
     try {
-      var result = await ImagePicker().getImage(
+      var result = await ImagePicker().pickImage(
         source: source,
         maxWidth: 800,
         maxHeight: 800,
