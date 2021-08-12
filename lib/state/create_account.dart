@@ -111,13 +111,18 @@ class _CreateAccountState extends State<CreateAccount> {
         'Name = $name, Address = $address, phone = $phone, user = $user, password = $password');
     String path =
         '${MyConstant.domain}/shoppingmall/getUserWhereUser.php?isAdd=true&user=$user';
-    await Dio().get(path).then((value) async{
+    await Dio().get(path).then((value) async {
       print('####value ==>> $value');
       if (value.toString() == 'null') {
         print('This User OK');
         if (file == null) {
           // No Avatar
-          processInsertSQL();
+          processInsertSQL(
+              name: name,
+              address: address,
+              phone: phone,
+              user: user,
+              password: password);
         } else {
           // Have Avatar
           print('#### Process Upload Avatar');
@@ -125,13 +130,20 @@ class _CreateAccountState extends State<CreateAccount> {
               '${MyConstant.domain}/shoppingmall/saveAvatar.php';
           int i = Random().nextInt(100000);
           String nameAvatar = 'avatar$i.jpg';
-           Map<String, dynamic> map = Map();
+          Map<String, dynamic> map = Map();
           map['file'] =
               await MultipartFile.fromFile(file!.path, filename: nameAvatar);
           FormData data = FormData.fromMap(map);
           await Dio().post(apiSaveAvatar, data: data).then((value) {
-            avatar = '/shoppingmall/avatar/$nameAvatar';}
-        );}
+            avatar = '/shoppingmall/avatar/$nameAvatar';
+            processInsertSQL(
+                name: name,
+                address: address,
+                phone: phone,
+                user: user,
+                password: password);
+          });
+        }
       } else {
         MyDialog().normalDialog(
             context, 'This User not available', 'Please change new User');
@@ -139,8 +151,24 @@ class _CreateAccountState extends State<CreateAccount> {
     });
   }
 
-  Future<Null> processInsertSQL() async {
+  Future<Null> processInsertSQL({
+    String? name,
+    String? address,
+    String? phone,
+    String? user,
+    String? password,
+  }) async {
     print('===>>> InsertMySQL OK');
+    String apiInserUser =
+        '${MyConstant.domain}/shoppingmall/insertUser.php?isAdd=true&name=$name&type=$typeUser&address=$address&phone=$phone&user=$user&password=$password&avatar=$avatar&lat=$lat&lng=$lng';
+    await Dio().get(apiInserUser).then((value) {
+      if (value.toString() == 'true') {
+        Navigator.pop(context);
+      } else {
+        MyDialog().normalDialog(
+            context, 'Create new user false!!!!', 'Please try again');
+      }
+    });
   }
 
   Future<Null> findLaLng() async {
