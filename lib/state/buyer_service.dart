@@ -11,6 +11,7 @@ class _BuyerServiceState extends State<BuyerService> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('Buyer Service'),),
       
     );
   }

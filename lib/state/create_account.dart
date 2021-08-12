@@ -159,9 +159,9 @@ class _CreateAccountState extends State<CreateAccount> {
     String? password,
   }) async {
     print('===>>> InsertMySQL OK');
-    String apiInserUser =
+    String apiInsertUser =
         '${MyConstant.domain}/shoppingmall/insertUser.php?isAdd=true&name=$name&type=$typeUser&address=$address&phone=$phone&user=$user&password=$password&avatar=$avatar&lat=$lat&lng=$lng';
-    await Dio().get(apiInserUser).then((value) {
+    await Dio().get(apiInsertUser).then((value) {
       if (value.toString() == 'true') {
         Navigator.pop(context);
       } else {
@@ -307,7 +307,7 @@ class _CreateAccountState extends State<CreateAccount> {
         Container(
           width: size * 0.6,
           child: RadioListTile(
-            value: 'buyer',
+            value: 'Buyer',
             groupValue: typeUser,
             onChanged: (value) {
               setState(() {
@@ -355,7 +355,7 @@ class _CreateAccountState extends State<CreateAccount> {
         Container(
           width: size * 0.6,
           child: RadioListTile(
-            value: 'rider',
+            value: 'Rider',
             groupValue: typeUser,
             onChanged: (value) {
               setState(() {
@@ -408,6 +408,11 @@ class _CreateAccountState extends State<CreateAccount> {
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: MyConstant.light),
                 borderRadius: BorderRadius.circular(25),
+                
+              ),
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+                borderRadius: BorderRadius.circular(25),
               ),
             ),
           ),
@@ -449,6 +454,10 @@ class _CreateAccountState extends State<CreateAccount> {
                 borderSide: BorderSide(color: MyConstant.light),
                 borderRadius: BorderRadius.circular(25),
               ),
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+                borderRadius: BorderRadius.circular(25),
+              ),
             ),
           ),
         ),
@@ -484,6 +493,10 @@ class _CreateAccountState extends State<CreateAccount> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: MyConstant.light),
+                borderRadius: BorderRadius.circular(25),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
                 borderRadius: BorderRadius.circular(25),
               ),
             ),
@@ -522,6 +535,10 @@ class _CreateAccountState extends State<CreateAccount> {
                 borderSide: BorderSide(color: MyConstant.light),
                 borderRadius: BorderRadius.circular(25),
               ),
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+                borderRadius: BorderRadius.circular(25),
+              ),
             ),
           ),
         ),
@@ -556,6 +573,10 @@ class _CreateAccountState extends State<CreateAccount> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: MyConstant.light),
+                borderRadius: BorderRadius.circular(25),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
                 borderRadius: BorderRadius.circular(25),
               ),
             ),
