@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shoppingmall/models/user_model.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
 import 'package:shoppingmall/utility/my_dialog.dart';
@@ -95,7 +96,7 @@ class _AuthenState extends State<Authen> {
   }) async {
     String apiCheckUser =
         '${MyConstant.domain}/shoppingmall/getUserWhereUser.php?isAdd=true&user=$user';
-    await Dio().get(apiCheckUser).then((value) {
+    await Dio().get(apiCheckUser).then((value) async {
       if (value.toString() == 'null') {
         MyDialog().normalDialog(
             context, 'User false!!!!', 'No user $user in Database');
@@ -104,15 +105,24 @@ class _AuthenState extends State<Authen> {
           UserModel model = UserModel.fromMap(item);
           if (password == model.password) {
             String type = model.type;
+
+            SharedPreferences preferences =
+                await SharedPreferences.getInstance();
+            preferences.setString('type', type);
+            preferences.setString('user', model.user);
+
             switch (type) {
               case 'Buyer':
-                Navigator.pushNamedAndRemoveUntil(context, MyConstant.routeBuyerService, (route) => false);
+                Navigator.pushNamedAndRemoveUntil(
+                    context, MyConstant.routeBuyerService, (route) => false);
                 break;
               case 'Seller':
-                Navigator.pushNamedAndRemoveUntil(context, MyConstant.routeSellerService, (route) => false);
+                Navigator.pushNamedAndRemoveUntil(
+                    context, MyConstant.routeSellerService, (route) => false);
                 break;
               case 'Rider':
-                Navigator.pushNamedAndRemoveUntil(context, MyConstant.routeRiderService, (route) => false);
+                Navigator.pushNamedAndRemoveUntil(
+                    context, MyConstant.routeRiderService, (route) => false);
                 break;
             }
           } else {

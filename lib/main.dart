@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shoppingmall/state/authen.dart';
 import 'package:shoppingmall/state/buyer_service.dart';
 import 'package:shoppingmall/state/create_account.dart';
@@ -16,8 +17,26 @@ final Map<String, WidgetBuilder> map = {
 
 String? initialRoute;
 
-void main() {
-  initialRoute = MyConstant.routeAuthen;
+Future<Null> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  String? type = preferences.getString('type');
+
+  if (type?.isEmpty ?? true) {
+    initialRoute = MyConstant.routeAuthen;
+  } else {
+    switch (type) {
+      case 'Buyer':
+        initialRoute = MyConstant.routeBuyerService;
+        break;
+      case 'Seller':
+        initialRoute = MyConstant.routeSellerService;
+        break;
+      case 'Rider':
+        initialRoute = MyConstant.routeRiderService;
+        break;
+    }
+  }
   runApp(MyApp());
 }
 
