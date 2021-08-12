@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class MyConstant {
   // General
   static String appName = 'Shopping Mall';
-  static String domain = 'https://3fa15c2d7599.ngrok.io';
+  static String domain = 'https://fbd7f23e8bf0.ngrok.io';
 
   // Route
   static String routeAuthen = '/authen';
@@ -37,10 +37,22 @@ class MyConstant {
         fontWeight: FontWeight.w700,
       );
 
+  TextStyle h2WhiteStyle() => TextStyle(
+        fontSize: 18,
+        color: Colors.white,
+        fontWeight: FontWeight.w700,
+      );
+
   TextStyle h3Style() => TextStyle(
         fontSize: 14,
         color: dark,
         fontWeight: FontWeight.normal,
+      );
+
+  TextStyle h3WhiteStyle() => TextStyle(
+        fontSize: 14,
+        color: Colors.white,
+        fontWeight: FontWeight.w700,
       );
 
   ButtonStyle myButtonStyle() => ElevatedButton.styleFrom(
