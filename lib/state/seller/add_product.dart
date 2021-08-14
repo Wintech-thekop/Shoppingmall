@@ -20,16 +20,71 @@ class _AddProductState extends State<AddProduct> {
           onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
           behavior: HitTestBehavior.opaque,
           child: Center(
-            child: Column(
-              children: [
-                buildAddProductName(constraints),
-                buildAddProductPrice(constraints),
-                buildAddProductDetail(constraints),
-              ],
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  buildAddProductName(constraints),
+                  buildAddProductPrice(constraints),
+                  buildAddProductDetail(constraints),
+                  biuldImage(constraints),
+                  buildButton(constraints),
+                ],
+              ),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Container buildButton(BoxConstraints constraints) {
+    return Container(
+      width: constraints.maxWidth * 0.75,
+      child: ElevatedButton(
+        onPressed: () {},
+        child: Text('Add Product'),
+        style: MyConstant().myButtonStyle(),
+      ),
+    );
+  }
+
+  Column biuldImage(BoxConstraints constraints) {
+    return Column(
+      children: [
+        Container(
+          width: constraints.maxWidth * 0.75,
+          height: constraints.maxWidth * 0.75,
+          child: Image.asset(MyConstant.image5),
+        ),
+        Container(
+          width: constraints.maxWidth * 0.75,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                width: constraints.maxWidth * 0.17,
+                height: constraints.maxWidth * 0.17,
+                child: Image.asset(MyConstant.image5),
+              ),
+              Container(
+                width: constraints.maxWidth * 0.17,
+                height: constraints.maxWidth * 0.17,
+                child: Image.asset(MyConstant.image5),
+              ),
+              Container(
+                width: constraints.maxWidth * 0.17,
+                height: constraints.maxWidth * 0.17,
+                child: Image.asset(MyConstant.image5),
+              ),
+              Container(
+                width: constraints.maxWidth * 0.17,
+                height: constraints.maxWidth * 0.17,
+                child: Image.asset(MyConstant.image5),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
