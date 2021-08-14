@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
+import 'package:shoppingmall/utility/my_dialog.dart';
 import 'package:shoppingmall/widgets/show_image.dart';
 import 'package:shoppingmall/widgets/show_title.dart';
 
@@ -67,12 +68,29 @@ class _AddProductState extends State<AddProduct> {
       width: constraints.maxWidth * 0.75,
       child: ElevatedButton(
         onPressed: () {
-          if (formKey.currentState!.validate()) {}
+          processAddProduct();
         },
         child: Text('Add Product'),
         style: MyConstant().myButtonStyle(),
       ),
     );
+  }
+
+  void processAddProduct() {
+    if (formKey.currentState!.validate()) {
+      bool checkFile = true;
+      for (var item in files) {
+        if (item == null) {
+          checkFile = false;
+        }
+      }
+      if (checkFile) {
+        print('### Select 4 images success');
+      } else {
+        MyDialog().normalDialog(
+            context, 'รูปภาพสินค้าไม่ครบ', 'กรุณาเลือรูปสินค้าให้ครบด้วยค่ะ');
+      }
+    }
   }
 
   Future<Null> processImagePicker(ImageSource source, int index) async {
