@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
 import 'package:shoppingmall/widgets/show_image.dart';
 import 'package:shoppingmall/widgets/show_title.dart';
@@ -12,6 +15,21 @@ class AddProduct extends StatefulWidget {
 
 class _AddProductState extends State<AddProduct> {
   final formKey = GlobalKey<FormState>();
+  List<File?> files = [];
+  File? file;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  void initialFile() {
+    for (var i = 0; i < 4; i++) {
+      files.add(null);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,6 +74,20 @@ class _AddProductState extends State<AddProduct> {
     );
   }
 
+  Future<Null> processImagePicker(ImageSource source, int index) async {
+    try {
+      var result = await ImagePicker().pickImage(
+        source: source,
+        maxHeight: 800,
+        maxWidth: 800,
+      );
+      setState(() {
+        file = File(result!.path);
+       // files[index] = file;
+      });
+    } catch (e) {}
+  }
+
   Future<Null> chooseSourseImageDialog(int index) async {
     print('You click image ==> $index');
     showDialog(
@@ -68,7 +100,7 @@ class _AddProductState extends State<AddProduct> {
             textStyle: MyConstant().h2Style(),
           ),
           subtitle: ShowTitle(
-            title: 'กรุณาเลือกรูปภาพจาก Caera หรือ Gallery',
+            title: 'กรุณาเลือกรูปภาพจาก Camera หรือ Gallery',
             textStyle: MyConstant().h3Style(),
           ),
         ),
@@ -77,11 +109,17 @@ class _AddProductState extends State<AddProduct> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               TextButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () {
+                  Navigator.pop(context);
+                  processImagePicker(ImageSource.camera, index);
+                },
                 child: Text('Camera'),
               ),
               TextButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () {
+                  Navigator.pop(context);
+                  processImagePicker(ImageSource.gallery, index);
+                },
                 child: Text('Gallery'),
               ),
             ],
@@ -97,13 +135,21 @@ class _AddProductState extends State<AddProduct> {
         Container(
           width: constraints.maxWidth * 0.75,
           height: constraints.maxWidth * 0.75,
-          child: Image.asset(MyConstant.image5),
+          child: file == null ? Image.asset(MyConstant.image5) : Image.file(file!),
         ),
         Container(
           width: constraints.maxWidth * 0.75,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              Container(
+                width: constraints.maxWidth * 0.17,
+                height: constraints.maxWidth * 0.17,
+                child: InkWell(
+                  onTap: () => chooseSourseImageDialog(0),
+                  child: Image.asset(MyConstant.image5),
+                ),
+              ),
               Container(
                 width: constraints.maxWidth * 0.17,
                 height: constraints.maxWidth * 0.17,
@@ -125,14 +171,6 @@ class _AddProductState extends State<AddProduct> {
                 height: constraints.maxWidth * 0.17,
                 child: InkWell(
                   onTap: () => chooseSourseImageDialog(3),
-                  child: Image.asset(MyConstant.image5),
-                ),
-              ),
-              Container(
-                width: constraints.maxWidth * 0.17,
-                height: constraints.maxWidth * 0.17,
-                child: InkWell(
-                  onTap: () => chooseSourseImageDialog(4),
                   child: Image.asset(MyConstant.image5),
                 ),
               ),
