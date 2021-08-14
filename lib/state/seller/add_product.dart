@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
+import 'package:shoppingmall/widgets/show_image.dart';
+import 'package:shoppingmall/widgets/show_title.dart';
 
 class AddProduct extends StatefulWidget {
   const AddProduct({Key? key}) : super(key: key);
@@ -54,6 +56,41 @@ class _AddProductState extends State<AddProduct> {
     );
   }
 
+  Future<Null> chooseSourseImageDialog(int index) async {
+    print('You click image ==> $index');
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: ListTile(
+          leading: ShowImage(path: MyConstant.image4),
+          title: ShowTitle(
+            title: 'Source Image $index ?',
+            textStyle: MyConstant().h2Style(),
+          ),
+          subtitle: ShowTitle(
+            title: 'กรุณาเลือกรูปภาพจาก Caera หรือ Gallery',
+            textStyle: MyConstant().h3Style(),
+          ),
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Camera'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Gallery'),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   Column biuldImage(BoxConstraints constraints) {
     return Column(
       children: [
@@ -70,22 +107,34 @@ class _AddProductState extends State<AddProduct> {
               Container(
                 width: constraints.maxWidth * 0.17,
                 height: constraints.maxWidth * 0.17,
-                child: Image.asset(MyConstant.image5),
+                child: InkWell(
+                  onTap: () => chooseSourseImageDialog(1),
+                  child: Image.asset(MyConstant.image5),
+                ),
               ),
               Container(
                 width: constraints.maxWidth * 0.17,
                 height: constraints.maxWidth * 0.17,
-                child: Image.asset(MyConstant.image5),
+                child: InkWell(
+                  onTap: () => chooseSourseImageDialog(2),
+                  child: Image.asset(MyConstant.image5),
+                ),
               ),
               Container(
                 width: constraints.maxWidth * 0.17,
                 height: constraints.maxWidth * 0.17,
-                child: Image.asset(MyConstant.image5),
+                child: InkWell(
+                  onTap: () => chooseSourseImageDialog(3),
+                  child: Image.asset(MyConstant.image5),
+                ),
               ),
               Container(
                 width: constraints.maxWidth * 0.17,
                 height: constraints.maxWidth * 0.17,
-                child: Image.asset(MyConstant.image5),
+                child: InkWell(
+                  onTap: () => chooseSourseImageDialog(4),
+                  child: Image.asset(MyConstant.image5),
+                ),
               ),
             ],
           ),
@@ -138,7 +187,9 @@ class _AddProductState extends State<AddProduct> {
         validator: (value) {
           if (value!.isEmpty) {
             return 'กรุณากรอกราคาสินค้าด้วยค่ะ';
-          } else {return null;}
+          } else {
+            return null;
+          }
         },
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
@@ -173,7 +224,9 @@ class _AddProductState extends State<AddProduct> {
         validator: (value) {
           if (value!.isEmpty) {
             return 'กรุณากรอกรายละเอียดสินค้าด้วยค่ะ';
-          } else {return null;}
+          } else {
+            return null;
+          }
         },
         maxLines: 4,
         decoration: InputDecoration(
