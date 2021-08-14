@@ -17,7 +17,10 @@ class _ShowProductSellerState extends State<ShowProductSeller> {
         backgroundColor: MyConstant.dark,
         onPressed: () =>
             Navigator.pushNamed(context, MyConstant.routeAddProduct),
-        child: Text('Add'),
+        child: Text(
+          'Add',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
     );
   }

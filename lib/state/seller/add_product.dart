@@ -9,6 +9,7 @@ class AddProduct extends StatefulWidget {
 }
 
 class _AddProductState extends State<AddProduct> {
+  final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,14 +22,17 @@ class _AddProductState extends State<AddProduct> {
           behavior: HitTestBehavior.opaque,
           child: Center(
             child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  buildAddProductName(constraints),
-                  buildAddProductPrice(constraints),
-                  buildAddProductDetail(constraints),
-                  biuldImage(constraints),
-                  buildButton(constraints),
-                ],
+              child: Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    buildAddProductName(constraints),
+                    buildAddProductPrice(constraints),
+                    buildAddProductDetail(constraints),
+                    biuldImage(constraints),
+                    buildButton(constraints),
+                  ],
+                ),
               ),
             ),
           ),
@@ -41,7 +45,9 @@ class _AddProductState extends State<AddProduct> {
     return Container(
       width: constraints.maxWidth * 0.75,
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          if (formKey.currentState!.validate()) {}
+        },
         child: Text('Add Product'),
         style: MyConstant().myButtonStyle(),
       ),
@@ -93,6 +99,13 @@ class _AddProductState extends State<AddProduct> {
       width: constraints.maxWidth * 0.75,
       margin: EdgeInsets.only(top: 16),
       child: TextFormField(
+        validator: (value) {
+          if (value!.isEmpty) {
+            return 'กรุณากรอกชื่อสินค้าด้วยค่ะ';
+          } else {
+            return null;
+          }
+        },
         decoration: InputDecoration(
           labelStyle: MyConstant().h3Style(),
           labelText: 'New Product... :',
@@ -108,6 +121,10 @@ class _AddProductState extends State<AddProduct> {
             borderSide: BorderSide(color: MyConstant.light),
             borderRadius: BorderRadius.circular(25),
           ),
+          errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.red),
+            borderRadius: BorderRadius.circular(25),
+          ),
         ),
       ),
     );
@@ -118,6 +135,11 @@ class _AddProductState extends State<AddProduct> {
       width: constraints.maxWidth * 0.75,
       margin: EdgeInsets.only(top: 16),
       child: TextFormField(
+        validator: (value) {
+          if (value!.isEmpty) {
+            return 'กรุณากรอกราคาสินค้าด้วยค่ะ';
+          } else {return null;}
+        },
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
           labelStyle: MyConstant().h3Style(),
@@ -134,6 +156,10 @@ class _AddProductState extends State<AddProduct> {
             borderSide: BorderSide(color: MyConstant.light),
             borderRadius: BorderRadius.circular(25),
           ),
+          errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.red),
+            borderRadius: BorderRadius.circular(25),
+          ),
         ),
       ),
     );
@@ -144,6 +170,11 @@ class _AddProductState extends State<AddProduct> {
       width: constraints.maxWidth * 0.75,
       margin: EdgeInsets.only(top: 16),
       child: TextFormField(
+        validator: (value) {
+          if (value!.isEmpty) {
+            return 'กรุณากรอกรายละเอียดสินค้าด้วยค่ะ';
+          } else {return null;}
+        },
         maxLines: 4,
         decoration: InputDecoration(
           hintStyle: MyConstant().h3Style(),
@@ -161,6 +192,10 @@ class _AddProductState extends State<AddProduct> {
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(color: MyConstant.light),
+            borderRadius: BorderRadius.circular(25),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.red),
             borderRadius: BorderRadius.circular(25),
           ),
         ),
