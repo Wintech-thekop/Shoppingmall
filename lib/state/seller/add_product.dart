@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shoppingmall/main.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
 import 'package:shoppingmall/utility/my_dialog.dart';
@@ -21,6 +22,10 @@ class _AddProductState extends State<AddProduct> {
   final formKey = GlobalKey<FormState>();
   List<File?> files = [];
   File? file;
+  TextEditingController productNameController = TextEditingController();
+  TextEditingController productPriceController = TextEditingController();
+  TextEditingController productDetailController = TextEditingController();
+  // List<String> paths = [];
 
   @override
   void initState() {
@@ -107,11 +112,24 @@ class _AddProductState extends State<AddProduct> {
           map['file'] =
               await MultipartFile.fromFile(item!.path, filename: nameFile);
           FormData data = FormData.fromMap(map);
-          await Dio().post(apiSaveProduct, data: data).then(
-            (value) {
+          
+              await Dio().post(apiSaveProduct, data: data).then((value) async {
               print('### Upload success');
               loop++;
               if (loop >= files.length) {
+               SharedPreferences preferences =
+                    await SharedPreferences.getInstance();
+
+                String idSeller = preferences.getString('id')!;
+                String nameSeller = preferences.getString('name')!;
+                String name = productNameController.text;
+                String price = productPriceController.text;
+                String detail = productDetailController.text;
+                // String images = paths.toString();
+                print('### idSeller = $idSeller, nameSeller = $nameSeller');
+                print('### name = $name, price = $price, detail = $detail');
+                // print('### images ==> $images');
+
                 Navigator.pop(context);
               }
             },
@@ -257,6 +275,7 @@ class _AddProductState extends State<AddProduct> {
       width: constraints.maxWidth * 0.75,
       margin: EdgeInsets.only(top: 16),
       child: TextFormField(
+        controller: productNameController,
         validator: (value) {
           if (value!.isEmpty) {
             return 'กรุณากรอกชื่อสินค้าด้วยค่ะ';
@@ -293,6 +312,7 @@ class _AddProductState extends State<AddProduct> {
       width: constraints.maxWidth * 0.75,
       margin: EdgeInsets.only(top: 16),
       child: TextFormField(
+        controller: productPriceController,
         validator: (value) {
           if (value!.isEmpty) {
             return 'กรุณากรอกราคาสินค้าด้วยค่ะ';
@@ -330,6 +350,7 @@ class _AddProductState extends State<AddProduct> {
       width: constraints.maxWidth * 0.75,
       margin: EdgeInsets.only(top: 16),
       child: TextFormField(
+        controller: productDetailController,
         validator: (value) {
           if (value!.isEmpty) {
             return 'กรุณากรอกรายละเอียดสินค้าด้วยค่ะ';
