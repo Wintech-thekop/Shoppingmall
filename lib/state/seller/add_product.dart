@@ -94,10 +94,12 @@ class _AddProductState extends State<AddProduct> {
         }
       }
       if (checkFile) {
-        print('### Select 4 images success');
+        //       print('### Select 4 images success');
+        MyDialog().showProgressDialog(context);
         String apiSaveProduct =
             '${MyConstant.domain}/shoppingmall/saveProduct.php';
 
+        int loop = 0;
         for (var item in files) {
           int i = Random().nextInt(1000000);
           String nameFile = 'product$i.jpg';
@@ -105,9 +107,15 @@ class _AddProductState extends State<AddProduct> {
           map['file'] =
               await MultipartFile.fromFile(item!.path, filename: nameFile);
           FormData data = FormData.fromMap(map);
-          await Dio()
-              .post(apiSaveProduct, data: data)
-              .then((value) => print('### Upload success'));
+          await Dio().post(apiSaveProduct, data: data).then(
+            (value) {
+              print('### Upload success');
+              loop++;
+              if (loop >= files.length) {
+                Navigator.pop(context);
+              }
+            },
+          );
         }
       } else {
         MyDialog().normalDialog(
@@ -138,7 +146,7 @@ class _AddProductState extends State<AddProduct> {
         title: ListTile(
           leading: ShowImage(path: MyConstant.image4),
           title: ShowTitle(
-            title: 'Source Image ${index+1} ?',
+            title: 'Source Image ${index + 1} ?',
             textStyle: MyConstant().h2Style(),
           ),
           subtitle: ShowTitle(

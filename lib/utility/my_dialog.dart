@@ -7,6 +7,23 @@ import 'package:shoppingmall/widgets/show_image.dart';
 import 'package:shoppingmall/widgets/show_title.dart';
 
 class MyDialog {
+  Future<Null> showProgressDialog(BuildContext context) async {
+    // การทำ Circular Progress Indicator
+    showDialog(
+      context: context,
+      builder: (context) => WillPopScope(
+        child: Center(
+          child: CircularProgressIndicator(
+            color: Colors.pink,
+          ),
+        ),
+        onWillPop: () async {
+          return false;
+        },
+      ),
+    );
+  }
+
   Future<Null> alertLocationService(
       BuildContext context, String title, String subtitle) async {
     showDialog(
