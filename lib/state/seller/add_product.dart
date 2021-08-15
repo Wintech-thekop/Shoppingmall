@@ -1,7 +1,10 @@
 import 'dart:io';
+import 'dart:math';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shoppingmall/main.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
 import 'package:shoppingmall/utility/my_dialog.dart';
 import 'package:shoppingmall/widgets/show_image.dart';
@@ -36,6 +39,12 @@ class _AddProductState extends State<AddProduct> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () => processAddProduct(),
+            icon: Icon(Icons.cloud_upload),
+          ),
+        ],
         title: Text('This is Add Order'),
       ),
       body: LayoutBuilder(
@@ -76,7 +85,7 @@ class _AddProductState extends State<AddProduct> {
     );
   }
 
-  void processAddProduct() {
+  Future<Null> processAddProduct() async {
     if (formKey.currentState!.validate()) {
       bool checkFile = true;
       for (var item in files) {
@@ -86,6 +95,20 @@ class _AddProductState extends State<AddProduct> {
       }
       if (checkFile) {
         print('### Select 4 images success');
+        String apiSaveProduct =
+            '${MyConstant.domain}/shoppingmall/saveProduct.php';
+
+        for (var item in files) {
+          int i = Random().nextInt(1000000);
+          String nameFile = 'product$i.jpg';
+          Map<String, dynamic> map = {};
+          map['file'] =
+              await MultipartFile.fromFile(item!.path, filename: nameFile);
+          FormData data = FormData.fromMap(map);
+          await Dio()
+              .post(apiSaveProduct, data: data)
+              .then((value) => print('### Upload success'));
+        }
       } else {
         MyDialog().normalDialog(
             context, 'รูปภาพสินค้าไม่ครบ', 'กรุณาเลือรูปสินค้าให้ครบด้วยค่ะ');
@@ -115,7 +138,7 @@ class _AddProductState extends State<AddProduct> {
         title: ListTile(
           leading: ShowImage(path: MyConstant.image4),
           title: ShowTitle(
-            title: 'Source Image $index ?',
+            title: 'Source Image ${index+1} ?',
             textStyle: MyConstant().h2Style(),
           ),
           subtitle: ShowTitle(
