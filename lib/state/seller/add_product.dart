@@ -25,7 +25,7 @@ class _AddProductState extends State<AddProduct> {
   TextEditingController productNameController = TextEditingController();
   TextEditingController productPriceController = TextEditingController();
   TextEditingController productDetailController = TextEditingController();
-  // List<String> paths = [];
+  List<String> paths = [];
 
   @override
   void initState() {
@@ -108,16 +108,20 @@ class _AddProductState extends State<AddProduct> {
         for (var item in files) {
           int i = Random().nextInt(1000000);
           String nameFile = 'product$i.jpg';
+
+          paths.add('/product/$nameFile');
+
           Map<String, dynamic> map = {};
           map['file'] =
               await MultipartFile.fromFile(item!.path, filename: nameFile);
           FormData data = FormData.fromMap(map);
-          
-              await Dio().post(apiSaveProduct, data: data).then((value) async {
+
+          await Dio().post(apiSaveProduct, data: data).then(
+            (value) async {
               print('### Upload success');
               loop++;
               if (loop >= files.length) {
-               SharedPreferences preferences =
+                SharedPreferences preferences =
                     await SharedPreferences.getInstance();
 
                 String idSeller = preferences.getString('id')!;
@@ -125,10 +129,15 @@ class _AddProductState extends State<AddProduct> {
                 String name = productNameController.text;
                 String price = productPriceController.text;
                 String detail = productDetailController.text;
-                // String images = paths.toString();
+                String images = paths.toString();
                 print('### idSeller = $idSeller, nameSeller = $nameSeller');
-                print('### name = $name, price = $price, detail = $detail');
-                // print('### images ==> $images');
+                print('### name = $name, price q= $price, detail = $detail');
+                print('### images ==> $images');
+
+                String path =
+                    '${MyConstant.domain}/shoppingmall/insertProduct.php?isAdd=true&idSeller=$idSeller&nameSeller=$nameSeller&name=$name&price=$price&detail=$detail&images=$images';
+
+                await Dio().get(path).then((value) => Navigator.pop(context));
 
                 Navigator.pop(context);
               }
