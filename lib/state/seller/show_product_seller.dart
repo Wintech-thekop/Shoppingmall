@@ -1,4 +1,9 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shoppingmall/models/product_model.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
 
 class ShowProductSeller extends StatefulWidget {
@@ -9,6 +14,29 @@ class ShowProductSeller extends StatefulWidget {
 }
 
 class _ShowProductSellerState extends State<ShowProductSeller> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loadValuefromAPI();
+  }
+
+  Future<Null> loadValuefromAPI() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String id = preferences.getString('id')!;
+
+    String apiGetProductWhereIdSeller =
+        '${MyConstant.domain}/shoppingmall/getProductWhereIdSeller.php?isAdd=true&idSeller=$id';
+
+    await Dio().get(apiGetProductWhereIdSeller).then((value) {
+      print('value ==> $value');
+      for (var item in json.decode(value.data)) {
+        ProductModel model = ProductModel.fromMap(item);
+        print('Name product ===> ${model.name}');
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
