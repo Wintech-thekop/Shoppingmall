@@ -133,10 +133,13 @@ class _ShowProductSellerState extends State<ShowProductSeller> {
               ),
             ),
             Container(
+              margin: EdgeInsets.only(top: 20),
               padding: EdgeInsets.all(4),
               width: constraints.maxWidth * 0.5 - 4,
+              height: constraints.maxWidth * 0.4,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ShowTitle(
                       title: 'Price ${productModels[index].price} THB',
@@ -144,6 +147,29 @@ class _ShowProductSellerState extends State<ShowProductSeller> {
                   ShowTitle(
                       title: productModels[index].detail,
                       textStyle: MyConstant().h3Style()),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            print('## You Click Edit');
+                          },
+                          icon: Icon(
+                            Icons.edit_outlined,
+                            size: 36,
+                            color: MyConstant.dark,
+                          )),
+                      IconButton(
+                          onPressed: () {
+                            print('## You Click Delete from index = $index');
+                          },
+                          icon: Icon(
+                            Icons.delete_outline,
+                            size: 36,
+                            color: MyConstant.dark,
+                          )),
+                    ],
+                  ),
                 ],
               ),
             ),
