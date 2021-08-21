@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shoppingmall/models/product_model.dart';
+import 'package:shoppingmall/state/seller/edit_product.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
 import 'package:shoppingmall/widgets/show_image.dart';
 import 'package:shoppingmall/widgets/show_progress.dart';
@@ -89,7 +90,8 @@ class _ShowProductSellerState extends State<ShowProductSeller> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: MyConstant.dark,
         onPressed: () =>
-            Navigator.pushNamed(context, MyConstant.routeAddProduct).then((value) => loadValueFromAPI()),
+            Navigator.pushNamed(context, MyConstant.routeAddProduct)
+                .then((value) => loadValueFromAPI()),
         child: Text(
           'Add',
           style: TextStyle(color: Colors.white),
@@ -157,6 +159,14 @@ class _ShowProductSellerState extends State<ShowProductSeller> {
                       IconButton(
                           onPressed: () {
                             print('## You Click Edit');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditProduct(
+                                  productModel: productModels[index],
+                                ),
+                              ),
+                            );
                           },
                           icon: Icon(
                             Icons.edit_outlined,
