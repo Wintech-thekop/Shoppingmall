@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:shoppingmall/models/product_model.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
+import 'package:shoppingmall/widgets/show_progress.dart';
 import 'package:shoppingmall/widgets/show_title.dart';
 
 class EditProduct extends StatefulWidget {
@@ -17,15 +19,30 @@ class _EditProductState extends State<EditProduct> {
   TextEditingController priceController = TextEditingController();
   TextEditingController detailController = TextEditingController();
 
+  List<String> pathImages = [];
+
   @override
   void initState() {
     // TODO: implement initState
 
     productModel = widget.productModel;
-    print('## name Edit ==> ${productModel!.name}');
+    // print('### image from mySQL ==>> ${productModel!.images}');
+    convertStringToArray();
     nameController.text = productModel!.name;
     priceController.text = productModel!.price;
     detailController.text = productModel!.detail;
+  }
+
+  void convertStringToArray() {
+    String string = productModel!.images;
+    // print('string ก่อนตัด ==>> $string');
+    string = string.substring(1, string.length - 1);
+    // print('string หลังตัด ==>> $string');
+    List<String> strings = string.split(',');
+    for (var item in strings) {
+      pathImages.add(item.trim());
+    }
+    print('### pathImages ==>> $pathImages');
   }
 
   @override
@@ -36,16 +53,52 @@ class _EditProductState extends State<EditProduct> {
       ),
       body: LayoutBuilder(
         builder: (context, constraints) => Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              buildTitle('General :'),
-              buildName(constraints),
-              buildPrice(constraints),
-              buildDetail(constraints),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                buildTitle('General :'),
+                buildName(constraints),
+                buildPrice(constraints),
+                buildDetail(constraints),
+                buildTitle('Image Product :'),
+                buildImage(constraints, 0),
+                SizedBox(height: 10,),
+                buildImage(constraints, 1),
+                SizedBox(height: 10,),
+                buildImage(constraints, 2),
+                SizedBox(height: 10,),
+                buildImage(constraints, 3),
+              ],
+            ),
           ),
         ),
+      ),
+    );
+  }
+
+  Container buildImage(BoxConstraints constraints, int index) {
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.add_a_photo),
+          ),
+          Container(
+            width: constraints.maxWidth * 0.5,
+            child: CachedNetworkImage(
+              imageUrl:
+                  '${MyConstant.domain}/shoppingmall/${pathImages[index]}',
+              placeholder: (context, url) => ShowProgress(),
+            ),
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.add_photo_alternate),
+          ),
+        ],
       ),
     );
   }
