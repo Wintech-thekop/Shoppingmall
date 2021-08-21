@@ -21,6 +21,8 @@ class _EditProductState extends State<EditProduct> {
 
   List<String> pathImages = [];
 
+  final formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -50,30 +52,62 @@ class _EditProductState extends State<EditProduct> {
     return Scaffold(
       appBar: AppBar(
         title: Text('This is Edit Product'),
+        actions: [
+          IconButton(
+            onPressed: () => processEditProduct(),
+            icon: Icon(Icons.edit),
+            tooltip: 'Edit Product',
+          ),
+        ],
       ),
       body: LayoutBuilder(
         builder: (context, constraints) => Center(
           child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                buildTitle('General :'),
-                buildName(constraints),
-                buildPrice(constraints),
-                buildDetail(constraints),
-                buildTitle('Image Product :'),
-                buildImage(constraints, 0),
-                SizedBox(height: 10,),
-                buildImage(constraints, 1),
-                SizedBox(height: 10,),
-                buildImage(constraints, 2),
-                SizedBox(height: 10,),
-                buildImage(constraints, 3),
-              ],
+            child: GestureDetector(
+              onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+              behavior: HitTestBehavior.opaque,
+              child: Form(
+                key: formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    buildTitle('General :'),
+                    buildName(constraints),
+                    buildPrice(constraints),
+                    buildDetail(constraints),
+                    buildTitle('Image Product :'),
+                    buildImage(constraints, 0),
+                    SizedBox(height: 10),
+                    buildImage(constraints, 1),
+                    SizedBox(height: 10),
+                    buildImage(constraints, 2),
+                    SizedBox(height: 10),
+                    buildImage(constraints, 3),
+                    buildButton(constraints),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Row buildButton(BoxConstraints constraints) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: EdgeInsets.only(top: 16),
+          width: constraints.maxWidth,
+          child: ElevatedButton.icon(
+            onPressed: () => processEditProduct(),
+            icon: Icon(Icons.edit),
+            label: Text('Edit Product'),
+          ),
+        ),
+      ],
     );
   }
 
@@ -111,6 +145,13 @@ class _EditProductState extends State<EditProduct> {
           width: constraints.maxWidth * 0.75,
           child: TextFormField(
             controller: nameController,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'กรุณากรอกชื่อสินค้าด้วยค่ะ';
+              } else {
+                return null;
+              }
+            },
             decoration: InputDecoration(
               labelText: 'Name :',
               border: OutlineInputBorder(),
@@ -129,7 +170,15 @@ class _EditProductState extends State<EditProduct> {
           margin: EdgeInsets.symmetric(vertical: 16),
           width: constraints.maxWidth * 0.75,
           child: TextFormField(
+            keyboardType: TextInputType.number,
             controller: priceController,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'กรุณากรอกราคาสินค้าด้วยค่ะ';
+              } else {
+                return null;
+              }
+            },
             decoration: InputDecoration(
               labelText: 'Price :',
               border: OutlineInputBorder(),
@@ -147,7 +196,15 @@ class _EditProductState extends State<EditProduct> {
         Container(
           width: constraints.maxWidth * 0.75,
           child: TextFormField(
+            maxLines: 4,
             controller: detailController,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'กรุณากรอกรายละเอียดสินค้าด้วยค่ะ';
+              } else {
+                return null;
+              }
+            },
             decoration: InputDecoration(
               labelText: 'Detail :',
               border: OutlineInputBorder(),
@@ -170,5 +227,15 @@ class _EditProductState extends State<EditProduct> {
         ),
       ],
     );
+  }
+
+  processEditProduct() {
+    if (formKey.currentState!.validate()) {
+      String name = nameController.text;
+      String price = priceController.text;
+      String detail = detailController.text;
+
+      print('### name => $name , price => $price ,detail => $detail');
+    }
   }
 }
