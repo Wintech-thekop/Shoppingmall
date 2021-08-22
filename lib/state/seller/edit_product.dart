@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shoppingmall/models/product_model.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
 import 'package:shoppingmall/widgets/show_progress.dart';
@@ -20,6 +23,8 @@ class _EditProductState extends State<EditProduct> {
   TextEditingController detailController = TextEditingController();
 
   List<String> pathImages = [];
+  List<File?> files = [];
+  File? file;
 
   final formKey = GlobalKey<FormState>();
 
@@ -43,6 +48,7 @@ class _EditProductState extends State<EditProduct> {
     List<String> strings = string.split(',');
     for (var item in strings) {
       pathImages.add(item.trim());
+      files.add(null);
     }
     print('### pathImages ==>> $pathImages');
   }
@@ -77,11 +83,8 @@ class _EditProductState extends State<EditProduct> {
                     buildDetail(constraints),
                     buildTitle('Image Product :'),
                     buildImage(constraints, 0),
-                    SizedBox(height: 10),
                     buildImage(constraints, 1),
-                    SizedBox(height: 10),
                     buildImage(constraints, 2),
-                    SizedBox(height: 10),
                     buildImage(constraints, 3),
                     buildButton(constraints),
                   ],
@@ -113,23 +116,28 @@ class _EditProductState extends State<EditProduct> {
 
   Container buildImage(BoxConstraints constraints, int index) {
     return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      decoration: BoxDecoration(border: Border.all(color: MyConstant.light)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => processChooseImage(ImageSource.camera, index),
             icon: Icon(Icons.add_a_photo),
           ),
           Container(
+            padding: EdgeInsets.symmetric(horizontal: 8),
             width: constraints.maxWidth * 0.5,
-            child: CachedNetworkImage(
-              imageUrl:
-                  '${MyConstant.domain}/shoppingmall/${pathImages[index]}',
-              placeholder: (context, url) => ShowProgress(),
-            ),
+            child: files[index] == null
+                ? CachedNetworkImage(
+                    imageUrl:
+                        '${MyConstant.domain}/shoppingmall/${pathImages[index]}',
+                    placeholder: (context, url) => ShowProgress(),
+                  )
+                : Image.file(files[index]!),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () => processChooseImage(ImageSource.gallery, index),
             icon: Icon(Icons.add_photo_alternate),
           ),
         ],
@@ -154,7 +162,9 @@ class _EditProductState extends State<EditProduct> {
             },
             decoration: InputDecoration(
               labelText: 'Name :',
-              border: OutlineInputBorder(),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: MyConstant.light),
+              ),
             ),
           ),
         ),
@@ -181,7 +191,9 @@ class _EditProductState extends State<EditProduct> {
             },
             decoration: InputDecoration(
               labelText: 'Price :',
-              border: OutlineInputBorder(),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: MyConstant.light),
+              ),
             ),
           ),
         ),
@@ -207,7 +219,9 @@ class _EditProductState extends State<EditProduct> {
             },
             decoration: InputDecoration(
               labelText: 'Detail :',
-              border: OutlineInputBorder(),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: MyConstant.light),
+              ),
             ),
           ),
         ),
@@ -237,5 +251,18 @@ class _EditProductState extends State<EditProduct> {
 
       print('### name => $name , price => $price ,detail => $detail');
     }
+  }
+
+  Future<Null> processChooseImage(ImageSource source, int index) async {
+    try {
+      var result = await ImagePicker().pickImage(
+        source: source,
+        maxHeight: 800,
+        maxWidth: 800,
+      );
+      setState(() {
+        files[index] = File(result!.path);
+      });
+    } catch (e) {}
   }
 }
