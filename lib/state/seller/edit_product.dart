@@ -25,6 +25,7 @@ class _EditProductState extends State<EditProduct> {
   List<String> pathImages = [];
   List<File?> files = [];
   File? file;
+  bool imageStatus = false; // false is not change image
 
   final formKey = GlobalKey<FormState>();
 
@@ -248,8 +249,21 @@ class _EditProductState extends State<EditProduct> {
       String name = nameController.text;
       String price = priceController.text;
       String detail = detailController.text;
+      String id = productModel!.id;
+      String images;
 
-      print('### name => $name , price => $price ,detail => $detail');
+      if (imageStatus) {
+        // Refresh and Uploadarray of path images
+        images = 'Waiting images refresh';
+      } else {
+        images = pathImages.toString();
+      }
+
+      print('imageStatus =$imageStatus');
+
+      print(
+          '### id => $id, name => $name , price => $price ,detail => $detail');
+      print('### images = $images');
     }
   }
 
@@ -262,6 +276,7 @@ class _EditProductState extends State<EditProduct> {
       );
       setState(() {
         files[index] = File(result!.path);
+        imageStatus = true;
       });
     } catch (e) {}
   }
