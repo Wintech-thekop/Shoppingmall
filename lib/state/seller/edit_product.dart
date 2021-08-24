@@ -1,10 +1,13 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shoppingmall/models/product_model.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
+import 'package:shoppingmall/utility/my_dialog.dart';
 import 'package:shoppingmall/widgets/show_progress.dart';
 import 'package:shoppingmall/widgets/show_title.dart';
 
@@ -244,8 +247,10 @@ class _EditProductState extends State<EditProduct> {
     );
   }
 
-  processEditProduct() {
+  Future<Null> processEditProduct() async {
     if (formKey.currentState!.validate()) {
+      MyDialog().showProgressDialog(context);
+
       String name = nameController.text;
       String price = priceController.text;
       String detail = detailController.text;
@@ -253,11 +258,28 @@ class _EditProductState extends State<EditProduct> {
       String images;
 
       if (imageStatus) {
-        // Refresh and Uploadarray of path images
-        images = 'Waiting images refresh';
-      } else {
-        images = pathImages.toString();
+        // upload Image and Refresh array pathImages
+        int index = 0;
+        for (var item in files) {
+          if (item != null) {
+            int i = Random().nextInt(1000000);
+            String nameImage = 'productEdit$i.jpg';
+            String apiSaveProduct =
+                '${MyConstant.domain}/shoppingmall/saveProduct.php';
+
+            Map<String, dynamic> map = {};
+            map['file'] =
+                await MultipartFile.fromFile(item.path, filename: nameImage);
+            FormData formData = FormData.fromMap(map);
+            await Dio().post(apiSaveProduct, data: formData).then((value) {
+              pathImages[index] = '/product/$nameImage';
+            });
+          }
+          index++;
+        }
       }
+      images = pathImages.toString();
+      Navigator.pop(context);
 
       print('imageStatus =$imageStatus');
 
