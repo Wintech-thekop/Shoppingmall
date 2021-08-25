@@ -286,6 +286,11 @@ class _EditProductState extends State<EditProduct> {
       print(
           '### id => $id, name => $name , price => $price ,detail => $detail');
       print('### images = $images');
+
+      String path =
+          '${MyConstant.domain}/shoppingmall/editProductWhereId.php?isAdd=true&id=$id&name=$name&price=$price&detail=$detail&images=$images';
+
+      await Dio().get(path).then((value) => Navigator.pop(context));
     }
   }
 
