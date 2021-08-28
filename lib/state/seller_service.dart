@@ -1,5 +1,9 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shoppingmall/models/user_model.dart';
 import 'package:shoppingmall/state/seller/show_order_seller.dart';
 import 'package:shoppingmall/state/seller/show_product_seller.dart';
 import 'package:shoppingmall/state/seller/show_shop_seller.dart';
@@ -21,6 +25,31 @@ class _SellerServiceState extends State<SellerService> {
     ShowProductSeller()
   ];
   int indexWidget = 0;
+  UserModel? userModel;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    findUserModel();
+  }
+
+  Future<Null> findUserModel() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String id = preferences.getString('id')!;
+    print('## Login id ==>> $id');
+    String apiGetUserWhereId =
+        '${MyConstant.domain}/shoppingmall/getUserWhereId.php?isAdd=true&id=$id';
+    await Dio().get(apiGetUserWhereId).then((value) {
+      print('## value ==>> $value');
+      for (var item in json.decode(value.data)) {
+        setState(() {
+          userModel = UserModel.fromMap(item);
+          print('### Login name ==> ${userModel!.name}');
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
