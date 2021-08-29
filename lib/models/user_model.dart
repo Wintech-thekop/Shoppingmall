@@ -82,7 +82,8 @@ class UserModel {
 
   String toJson() => json.encode(toMap());
 
-  factory UserModel.fromJson(String source) => UserModel.fromMap(json.decode(source));
+  factory UserModel.fromJson(String source) =>
+      UserModel.fromMap(json.decode(source));
 
   @override
   String toString() {
@@ -92,31 +93,31 @@ class UserModel {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-  
+
     return other is UserModel &&
-      other.id == id &&
-      other.name == name &&
-      other.type == type &&
-      other.address == address &&
-      other.phone == phone &&
-      other.user == user &&
-      other.password == password &&
-      other.avatar == avatar &&
-      other.lat == lat &&
-      other.lng == lng;
+        other.id == id &&
+        other.name == name &&
+        other.type == type &&
+        other.address == address &&
+        other.phone == phone &&
+        other.user == user &&
+        other.password == password &&
+        other.avatar == avatar &&
+        other.lat == lat &&
+        other.lng == lng;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-      name.hashCode ^
-      type.hashCode ^
-      address.hashCode ^
-      phone.hashCode ^
-      user.hashCode ^
-      password.hashCode ^
-      avatar.hashCode ^
-      lat.hashCode ^
-      lng.hashCode;
+        name.hashCode ^
+        type.hashCode ^
+        address.hashCode ^
+        phone.hashCode ^
+        user.hashCode ^
+        password.hashCode ^
+        avatar.hashCode ^
+        lat.hashCode ^
+        lng.hashCode;
   }
 }
