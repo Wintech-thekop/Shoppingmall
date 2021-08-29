@@ -8,6 +8,7 @@ class UserModel {
   final String phone;
   final String user;
   final String password;
+  final String avatar;
   final String lat;
   final String lng;
   UserModel({
@@ -18,6 +19,7 @@ class UserModel {
     required this.phone,
     required this.user,
     required this.password,
+    required this.avatar,
     required this.lat,
     required this.lng,
   });
@@ -30,6 +32,7 @@ class UserModel {
     String? phone,
     String? user,
     String? password,
+    String? avatar,
     String? lat,
     String? lng,
   }) {
@@ -41,6 +44,7 @@ class UserModel {
       phone: phone ?? this.phone,
       user: user ?? this.user,
       password: password ?? this.password,
+      avatar: avatar ?? this.avatar,
       lat: lat ?? this.lat,
       lng: lng ?? this.lng,
     );
@@ -55,6 +59,7 @@ class UserModel {
       'phone': phone,
       'user': user,
       'password': password,
+      'avatar': avatar,
       'lat': lat,
       'lng': lng,
     };
@@ -69,6 +74,7 @@ class UserModel {
       phone: map['phone'],
       user: map['user'],
       password: map['password'],
+      avatar: map['avatar'],
       lat: map['lat'],
       lng: map['lng'],
     );
@@ -80,7 +86,7 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(id: $id, name: $name, type: $type, address: $address, phone: $phone, user: $user, password: $password, lat: $lat, lng: $lng)';
+    return 'UserModel(id: $id, name: $name, type: $type, address: $address, phone: $phone, user: $user, password: $password, avatar: $avatar, lat: $lat, lng: $lng)';
   }
 
   @override
@@ -95,6 +101,7 @@ class UserModel {
       other.phone == phone &&
       other.user == user &&
       other.password == password &&
+      other.avatar == avatar &&
       other.lat == lat &&
       other.lng == lng;
   }
@@ -108,6 +115,7 @@ class UserModel {
       phone.hashCode ^
       user.hashCode ^
       password.hashCode ^
+      avatar.hashCode ^
       lat.hashCode ^
       lng.hashCode;
   }

@@ -63,7 +63,7 @@ class _SellerServiceState extends State<SellerService> {
             ShowSignOut(),
             Column(
               children: [
-                UserAccountsDrawerHeader(accountName: null, accountEmail: null),
+                buildHeader(),
                 showOrder(),
                 showShop(),
                 showProduct(),
@@ -73,6 +73,36 @@ class _SellerServiceState extends State<SellerService> {
         ),
       ),
       body: widgets[indexWidget],
+    );
+  }
+
+  UserAccountsDrawerHeader buildHeader() {
+    return UserAccountsDrawerHeader(
+      otherAccountsPictures: [
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.face_outlined),
+            iconSize: 36,
+            color: MyConstant.light,
+            tooltip: 'Edit Shop',
+          ),
+        ],
+      decoration: BoxDecoration(
+        gradient: RadialGradient(
+          colors: [MyConstant.light, MyConstant.dark],
+          center: Alignment(-0.8, -0.2),
+          radius: 1,
+        ),
+      ),
+      currentAccountPicture: CircleAvatar(
+        backgroundImage:
+            NetworkImage('${MyConstant.domain}${userModel!.avatar}'),
+      ),
+      accountName: Text(
+        userModel == null ? 'name ?' : userModel!.name,
+        style: MyConstant().h2WhiteStyle(),
+      ),
+      accountEmail: Text(userModel == null ? 'Type ?' : userModel!.type),
     );
   }
 
