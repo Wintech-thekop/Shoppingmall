@@ -8,6 +8,7 @@ import 'package:shoppingmall/state/seller/show_order_seller.dart';
 import 'package:shoppingmall/state/seller/show_product_seller.dart';
 import 'package:shoppingmall/state/seller/show_shop_seller.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
+import 'package:shoppingmall/widgets/show_progress.dart';
 import 'package:shoppingmall/widgets/show_signout.dart';
 import 'package:shoppingmall/widgets/show_title.dart';
 
@@ -19,11 +20,7 @@ class SellerService extends StatefulWidget {
 }
 
 class _SellerServiceState extends State<SellerService> {
-  List<Widget> widgets = [
-    ShowOrderSeller(),
-    ShowShopSeller(),
-    ShowProductSeller()
-  ];
+  List<Widget> widgets = [];
   int indexWidget = 0;
   UserModel? userModel;
 
@@ -46,6 +43,10 @@ class _SellerServiceState extends State<SellerService> {
         setState(() {
           userModel = UserModel.fromMap(item);
           print('### Login name ==> ${userModel!.name}');
+
+          widgets.add(ShowOrderSeller());
+          widgets.add(ShowShopSeller(userModel: userModel!));
+          widgets.add(ShowProductSeller());
         });
       }
     });
@@ -57,7 +58,7 @@ class _SellerServiceState extends State<SellerService> {
       appBar: AppBar(
         title: Text('Seller Service'),
       ),
-      drawer: Drawer(
+      drawer: widgets.length == 0 ? SizedBox() : Drawer(
         child: Stack(
           children: [
             ShowSignOut(),
@@ -72,21 +73,21 @@ class _SellerServiceState extends State<SellerService> {
           ],
         ),
       ),
-      body: widgets[indexWidget],
+      body: widgets.length == 0 ? ShowProgress() : widgets[indexWidget],
     );
   }
 
   UserAccountsDrawerHeader buildHeader() {
     return UserAccountsDrawerHeader(
       otherAccountsPictures: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.face_outlined),
-            iconSize: 36,
-            color: MyConstant.light,
-            tooltip: 'Edit Shop',
-          ),
-        ],
+        IconButton(
+          onPressed: () {},
+          icon: Icon(Icons.face_outlined),
+          iconSize: 36,
+          color: MyConstant.light,
+          tooltip: 'Edit Shop',
+        ),
+      ],
       decoration: BoxDecoration(
         gradient: RadialGradient(
           colors: [MyConstant.light, MyConstant.dark],
