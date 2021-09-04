@@ -85,7 +85,7 @@ class _SellerServiceState extends State<SellerService> {
           icon: Icon(Icons.face_outlined),
           iconSize: 36,
           color: MyConstant.light,
-          tooltip: 'Edit Shop',
+          tooltip: 'Edit Shop Profile',
         ),
       ],
       decoration: BoxDecoration(
@@ -143,7 +143,7 @@ class _SellerServiceState extends State<SellerService> {
         color: Colors.pink,
       ),
       title: ShowTitle(
-        title: 'Show Shop',
+        title: 'Show Shop Profile',
         textStyle: MyConstant().h2Style(),
       ),
       subtitle: ShowTitle(

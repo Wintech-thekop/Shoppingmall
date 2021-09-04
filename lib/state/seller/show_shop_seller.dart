@@ -27,6 +27,12 @@ class _ShowShopSellerState extends State<ShowShopSeller> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: MyConstant.primary,
+        child: Icon(Icons.edit),
+        onPressed: () =>
+            Navigator.pushNamed(context, MyConstant.routeEditShopProfile),
+      ),
       body: LayoutBuilder(
         builder: (context, constraints) => Padding(
           padding: const EdgeInsets.all(8.0),
@@ -35,7 +41,7 @@ class _ShowShopSellerState extends State<ShowShopSeller> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ShowTitle(
-                    title: 'Name Shop :', textStyle: MyConstant().h2Style()),
+                    title: 'Shop Name :', textStyle: MyConstant().h2Style()),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -68,7 +74,8 @@ class _ShowShopSellerState extends State<ShowShopSeller> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: ShowTitle(
-                      title: 'Avatar: ', textStyle: MyConstant().h2Style()),
+                      title: 'Image Profile: ',
+                      textStyle: MyConstant().h2Style()),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

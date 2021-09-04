@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class MyConstant {
   // General
   static String appName = 'Shopping Mall';
-  static String domain = 'https://f438-2001-fb1-154-fd7b-ad38-d70b-ed24-cc5b.ngrok.io';
+  static String domain = 'https://2c28-2001-fb1-154-fd7b-5100-afa7-2de9-271d.ngrok.io';
 
   // Route
   static String routeAuthen = '/authen';
@@ -12,6 +12,7 @@ class MyConstant {
   static String routeRiderService = '/riderService';
   static String routeSellerService = '/sellerService';
   static String routeAddProduct = '/addProduct';
+  static String routeEditShopProfile = '/editShopProfile';
 
   // images
   static String image1 = 'images/image1.png';
