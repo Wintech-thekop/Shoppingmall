@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shoppingmall/models/user_model.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
@@ -23,12 +25,34 @@ class _EditShopProfileState extends State<EditShopProfile> {
   TextEditingController nameController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
+  LatLng? latLng;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     findUser();
+    findLatLng();
+  }
+
+  Future<Null> findLatLng() async {
+    Position? position = await findPosition();
+    if (position != null) {
+      setState(() {
+        latLng = LatLng(position.latitude, position.longitude);
+        print('lat = ${latLng!.latitude}');
+      });
+    }
+  }
+
+  Future<Position?> findPosition() async {
+    Position? position;
+    try {
+      position = await Geolocator.getCurrentPosition();
+    } catch (e) {
+      position = null;
+    }
+    return position;
   }
 
   Future<Null> findUser() async {
@@ -69,14 +93,54 @@ class _EditShopProfileState extends State<EditShopProfile> {
           builder: (context, constraints) => ListView(
             padding: EdgeInsets.all(16),
             children: [
-              ShowTitle(title: 'General', textStyle: MyConstant().h2Style()),
+              ShowTitle(title: 'General : ', textStyle: MyConstant().h2Style()),
               buildName(constraints),
               buildAddress(constraints),
               buildPhone(constraints),
+              ShowTitle(
+                  title: 'Image Profile : ', textStyle: MyConstant().h2Style()),
               buildAvatar(constraints),
+              ShowTitle(
+                  title: 'Location : ', textStyle: MyConstant().h2Style()),
+              buildMap(constraints),
             ],
           ),
         ));
+  }
+
+  Row buildMap(BoxConstraints constraints) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey),
+          ),
+          margin: EdgeInsets.symmetric(vertical: 16),
+          width: constraints.maxWidth * 0.75,
+          height: constraints.maxWidth * 0.5,
+          child: latLng == null
+              ? ShowProgress()
+              : GoogleMap(
+                  initialCameraPosition: CameraPosition(
+                    target: latLng!,
+                    zoom: 16,
+                  ),
+                  onMapCreated: (controller) {},
+                  markers: <Marker>[
+                    Marker(
+                      markerId: MarkerId('id'),
+                      position: latLng!,
+                      infoWindow: InfoWindow(
+                          title: 'Your Location',
+                          snippet:
+                              'lat = ${latLng!.latitude}, lng = ${latLng!.longitude}'),
+                    ),
+                  ].toSet(),
+                ),
+        ),
+      ],
+    );
   }
 
   Row buildAvatar(BoxConstraints constraints) {
@@ -125,13 +189,12 @@ class _EditShopProfileState extends State<EditShopProfile> {
     );
   }
 
-
-Row buildPhone(BoxConstraints constraints) {
+  Row buildPhone(BoxConstraints constraints) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          margin: EdgeInsets.only(top: 16),
+          margin: EdgeInsets.symmetric(vertical: 16),
           width: constraints.maxWidth * 0.6,
           child: TextFormField(
             controller: phoneController,
