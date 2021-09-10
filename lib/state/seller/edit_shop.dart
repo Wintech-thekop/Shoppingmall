@@ -27,6 +27,8 @@ class _EditShopProfileState extends State<EditShopProfile> {
   TextEditingController phoneController = TextEditingController();
   LatLng? latLng;
 
+  final formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -79,34 +81,52 @@ class _EditShopProfileState extends State<EditShopProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('This is Edit Shop profile'),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.edit),
-              tooltip: 'Edit Shop profile',
-            ),
-          ],
-        ),
-        body: LayoutBuilder(
-          builder: (context, constraints) => ListView(
-            padding: EdgeInsets.all(16),
-            children: [
-              ShowTitle(title: 'General : ', textStyle: MyConstant().h2Style()),
-              buildName(constraints),
-              buildAddress(constraints),
-              buildPhone(constraints),
-              ShowTitle(
-                  title: 'Image Profile : ', textStyle: MyConstant().h2Style()),
-              buildAvatar(constraints),
-              ShowTitle(
-                  title: 'Location : ', textStyle: MyConstant().h2Style()),
-              buildMap(constraints),
-            ],
+      appBar: AppBar(
+        title: Text('This is Edit Shop profile'),
+        actions: [
+          IconButton(
+            onPressed: () => processEditProfileSeller(),
+            icon: Icon(Icons.edit),
+            tooltip: 'Update Shop profile',
           ),
-        ));
+        ],
+      ),
+      body: LayoutBuilder(
+        builder: (context, constraints) => GestureDetector(
+          onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+          behavior: HitTestBehavior.opaque,
+          child: Form(
+            key: formKey,
+            child: ListView(
+              padding: EdgeInsets.all(16),
+              children: [
+                buildTitle('General : '),
+                buildName(constraints),
+                buildAddress(constraints),
+                buildPhone(constraints),
+                buildTitle('Image Profile : '),
+                buildAvatar(constraints),
+                buildTitle('Location : '),
+                buildMap(constraints),
+                buildButton()
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
+
+  Future<Null> processEditProfileSeller() async {
+    print('processEditProfileSeller Work');
+    if (formKey.currentState!.validate()) {}
+  }
+
+  ElevatedButton buildButton() => ElevatedButton.icon(
+        onPressed: () => processEditProfileSeller(),
+        icon: Icon(Icons.edit),
+        label: Text('Update Shop Profile'),
+      );
 
   Row buildMap(BoxConstraints constraints) {
     return Row(
@@ -198,6 +218,13 @@ class _EditShopProfileState extends State<EditShopProfile> {
           width: constraints.maxWidth * 0.6,
           child: TextFormField(
             controller: phoneController,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'กรุณากรอกเบอร์ติดต่อร้านค้าด้วยค่ะ';
+              } else {
+                return null;
+              }
+            },
             decoration: InputDecoration(
               labelText: 'Phone :',
               border: OutlineInputBorder(
@@ -220,6 +247,13 @@ class _EditShopProfileState extends State<EditShopProfile> {
           child: TextFormField(
             maxLines: 3,
             controller: addressController,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'กรุณากรอกที่อยู่ร้านค้าด้วยค่ะ';
+              } else {
+                return null;
+              }
+            },
             decoration: InputDecoration(
               labelText: 'Address :',
               border: OutlineInputBorder(
@@ -241,6 +275,13 @@ class _EditShopProfileState extends State<EditShopProfile> {
           width: constraints.maxWidth * 0.6,
           child: TextFormField(
             controller: nameController,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'กรุณากรอกชื่อร้านค้าด้วยค่ะ';
+              } else {
+                return null;
+              }
+            },
             decoration: InputDecoration(
               labelText: 'Shop Name :',
               border: OutlineInputBorder(
@@ -252,4 +293,7 @@ class _EditShopProfileState extends State<EditShopProfile> {
       ],
     );
   }
+
+  ShowTitle buildTitle(String title) =>
+      ShowTitle(title: title, textStyle: MyConstant().h2Style());
 }
