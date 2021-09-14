@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
@@ -122,9 +123,33 @@ class _EditShopProfileState extends State<EditShopProfile> {
 
   Future<Null> processEditProfileSeller() async {
     print('processEditProfileSeller Work');
-    if (formKey.currentState!.validate()) {}
+    if (formKey.currentState!.validate()) {
+      if (file == null) {
+        print('### Use current Avatar');
+      } else {
+        print('### Use new Avatar');
+        String apiSaveAvatar =
+            '${MyConstant.domain}/shoppingmall/saveAvatar.php';
+
+        List<String> nameAvatar = userModel!.avatar.split('/');
+        String nameFile = nameAvatar[nameAvatar.length - 1];
+        print('### User new Avatar nameFile before ===> $nameFile');
+
+        nameFile = 'edit${Random().nextInt(100)}$nameFile';
+        print('### User new Avatar nameFile after ===> $nameFile');
+
+        Map<String, dynamic> map = {};
+        map['file'] =
+            await MultipartFile.fromFile(file!.path, filename: nameFile);
+        FormData formData = FormData.fromMap(map);
+        await Dio()
+            .post(apiSaveAvatar, data: formData)
+            .then((value) => print('### Upload success ###'));
+      }
+    }
   }
 
+  Future<Null> editValueToMySQL() async {}
   ElevatedButton buildButton() => ElevatedButton.icon(
         onPressed: () => processEditProfileSeller(),
         icon: Icon(Icons.edit),
