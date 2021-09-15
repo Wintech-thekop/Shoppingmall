@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shoppingmall/models/user_model.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
+import 'package:shoppingmall/utility/my_dialog.dart';
 import 'package:shoppingmall/widgets/show_image.dart';
 import 'package:shoppingmall/widgets/show_progress.dart';
 import 'package:shoppingmall/widgets/show_title.dart';
@@ -123,9 +124,12 @@ class _EditShopProfileState extends State<EditShopProfile> {
 
   Future<Null> processEditProfileSeller() async {
     print('processEditProfileSeller Work');
+MyDialog().showProgressDialog(context);
+
     if (formKey.currentState!.validate()) {
       if (file == null) {
         print('### Use current Avatar');
+        editValueToMySQL(userModel!.avatar);
       } else {
         print('### Use new Avatar');
         String apiSaveAvatar =
@@ -142,14 +146,25 @@ class _EditShopProfileState extends State<EditShopProfile> {
         map['file'] =
             await MultipartFile.fromFile(file!.path, filename: nameFile);
         FormData formData = FormData.fromMap(map);
-        await Dio()
-            .post(apiSaveAvatar, data: formData)
-            .then((value) => print('### Upload success ###'));
+        await Dio().post(apiSaveAvatar, data: formData).then((value) {
+          print('### Upload success ###');
+          String pathAvatar = '/shoppingmall/avatar/$nameFile';
+          editValueToMySQL(pathAvatar);
+        });
       }
     }
   }
 
-  Future<Null> editValueToMySQL() async {}
+  Future<Null> editValueToMySQL(String pathAvatar) async {
+    print('### pathAvatar ==> $pathAvatar');
+    String apiEditProfile =
+        '${MyConstant.domain}/shoppingmall/editProfileSellerWhereId.php?isAdd=true&id=${userModel!.id}&name=${nameController.text}&address=${addressController.text}&phone=${phoneController.text}&avatar=$pathAvatar&lat=${latLng!.latitude}&lng=${latLng!.longitude}';
+    await Dio().get(apiEditProfile).then((value) {
+      Navigator.pop(context);
+      Navigator.pop(context);
+    });
+  }
+
   ElevatedButton buildButton() => ElevatedButton.icon(
         onPressed: () => processEditProfileSeller(),
         icon: Icon(Icons.edit),
