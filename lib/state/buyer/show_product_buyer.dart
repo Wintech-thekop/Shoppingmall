@@ -26,7 +26,7 @@ UserModel? userModel;
       appBar: AppBar(
         title: Text(userModel!.name),
       ),
-      body: Text('This is Show Product Buyer'),
+      body: Text('This is Show Product Buyer IdSeller ==> ${userModel!.id}'),
     );
   }
 }
