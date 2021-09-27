@@ -24,6 +24,7 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
   bool? haveData;
   List<ProductModel> productModels = [];
   List<List<String>> listImages = [];
+  int imageIndex = 0;
 
   @override
   void initState() {
@@ -37,7 +38,7 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
     String urlAPI =
         '${MyConstant.domain}/shoppingmall/getProductWhereIdSeller.php?isAdd=true&idSeller=${userModel!.id}';
     await Dio().get(urlAPI).then((value) {
-      print('### value = $value');
+      //  print('### value = $value');
 
       if (value.toString() == 'null') {
         setState(() {
@@ -156,20 +157,73 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
       ProductModel productModel, List<String> images) async {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: ListTile(
-          leading: ShowImage(path: MyConstant.image3),
-          title: ShowTitle(
-            title: productModel.name,
-            textStyle: MyConstant().h2Style(),
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: ListTile(
+            leading: ShowImage(path: MyConstant.image3),
+            title: ShowTitle(
+              title: productModel.name,
+              textStyle: MyConstant().h2Style(),
+            ),
+            subtitle: ShowTitle(
+              title: 'Price : ${productModel.price} THB',
+              textStyle: MyConstant().h3Style(),
+            ),
           ),
-          subtitle: ShowTitle(
-            title: 'Price : ${productModel.price} THB',
-            textStyle: MyConstant().h3Style(),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CachedNetworkImage(
+                imageUrl:
+                    '${MyConstant.domain}/shoppingmall/${images[imageIndex]}',
+                placeholder: (context, url) => ShowProgress(),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          imageIndex = 0;
+                          print('imageIndex = $imageIndex');
+                        });
+                      },
+                      icon: Icon(Icons.filter_1),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          imageIndex = 1;
+                          print('imageIndex = $imageIndex');
+                        });
+                      },
+                      icon: Icon(Icons.filter_2),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          imageIndex = 2;
+                          print('imageIndex = $imageIndex');
+                        });
+                      },
+                      icon: Icon(Icons.filter_3),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          imageIndex = 3;
+                          print('imageIndex = $imageIndex');
+                        });
+                      },
+                      icon: Icon(Icons.filter_4),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ),
-        content: CachedNetworkImage(
-          imageUrl: '${MyConstant.domain}/shoppingmall/${images[0]}',
         ),
       ),
     );
