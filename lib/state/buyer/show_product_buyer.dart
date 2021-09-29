@@ -128,7 +128,8 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
                             title: 'Price : ${productModels[index].price} THB',
                             textStyle: MyConstant().h3Style()),
                         ShowTitle(
-                            title: 'Detail : ${productModels[index].detail}',
+                            title: cutWord(
+                                'Detail : ${productModels[index].detail}'),
                             textStyle: MyConstant().h3Style()),
                       ],
                     ),
@@ -170,62 +171,93 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
               textStyle: MyConstant().h3Style(),
             ),
           ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CachedNetworkImage(
-                imageUrl:
-                    '${MyConstant.domain}/shoppingmall/${images[imageIndex]}',
-                placeholder: (context, url) => ShowProgress(),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CachedNetworkImage(
+                  imageUrl:
+                      '${MyConstant.domain}/shoppingmall/${images[imageIndex]}',
+                  placeholder: (context, url) => ShowProgress(),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            imageIndex = 0;
+                            print('imageIndex = $imageIndex');
+                          });
+                        },
+                        icon: Icon(Icons.filter_1),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            imageIndex = 1;
+                            print('imageIndex = $imageIndex');
+                          });
+                        },
+                        icon: Icon(Icons.filter_2),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            imageIndex = 2;
+                            print('imageIndex = $imageIndex');
+                          });
+                        },
+                        icon: Icon(Icons.filter_3),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            imageIndex = 3;
+                            print('imageIndex = $imageIndex');
+                          });
+                        },
+                        icon: Icon(Icons.filter_4),
+                      ),
+                    ],
+                  ),
+                ),
+                Row(
                   children: [
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          imageIndex = 0;
-                          print('imageIndex = $imageIndex');
-                        });
-                      },
-                      icon: Icon(Icons.filter_1),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          imageIndex = 1;
-                          print('imageIndex = $imageIndex');
-                        });
-                      },
-                      icon: Icon(Icons.filter_2),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          imageIndex = 2;
-                          print('imageIndex = $imageIndex');
-                        });
-                      },
-                      icon: Icon(Icons.filter_3),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          imageIndex = 3;
-                          print('imageIndex = $imageIndex');
-                        });
-                      },
-                      icon: Icon(Icons.filter_4),
-                    ),
+                    ShowTitle(
+                        title: 'รายละเอียด (Detail) :',
+                        textStyle: MyConstant().h2Style()),
                   ],
                 ),
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 230,
+                        child: ShowTitle(
+                            title: productModel.detail,
+                            textStyle: MyConstant().h3Style()),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  String cutWord(String string) {
+    String result = string;
+    if (result.length >= 100) {
+      result = result.substring(0, 100);
+      result = '$result ...';
+    }
+    return result;
   }
 }
