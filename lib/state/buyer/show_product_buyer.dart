@@ -25,6 +25,7 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
   List<ProductModel> productModels = [];
   List<List<String>> listImages = [];
   int imageIndex = 0;
+  int amountCount = 1;
 
   @override
   void initState() {
@@ -95,6 +96,7 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
         itemBuilder: (context, index) => GestureDetector(
           onTap: () {
             showAlertDialog(productModels[index], listImages[index]);
+ //           amountCount = 1;
           },
           child: Card(
             child: Row(
@@ -243,12 +245,75 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),
+          actions: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                amountAddRemove(setState),
+                addCartOrCancel(context),
+              ],
+            ),
+          ],
         ),
       ),
+    );
+  }
+
+  Row addCartOrCancel(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(
+            'Add Cart',
+            style: MyConstant().h2GreenStyle(),
+          ),
+        ),
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(
+            'Cancel',
+            style: MyConstant().h2RedStyle(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Row amountAddRemove(StateSetter setState) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        IconButton(
+          onPressed: () {
+            if (amountCount >= 2) {
+              setState(() {
+                amountCount--;
+              });
+            }
+          },
+          icon: Icon(Icons.remove_circle_outline),
+          color: MyConstant.dark,
+        ),
+        ShowTitle(
+          title: amountCount.toString(),
+          textStyle: MyConstant().h1Style(),
+        ),
+        IconButton(
+          onPressed: () {
+            setState(() {
+              amountCount++;
+            });
+          },
+          icon: Icon(Icons.add_circle_outline),
+          color: MyConstant.dark,
+        ),
+      ],
     );
   }
 
