@@ -22,6 +22,14 @@ class _BuyerServiceState extends State<BuyerService> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Buyer Service'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, MyConstant.routeShowCart);
+            },
+            icon: Icon(Icons.shopping_cart_outlined),
+          ),
+        ],
       ),
       drawer: Drawer(
         child: Stack(
