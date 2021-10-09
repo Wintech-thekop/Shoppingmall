@@ -311,9 +311,9 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
                         await SQLiteHelper()
                             .insertValueToSQLite(sqLiteModel)
                             .then((value) {
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                            });
+                          amountCount = 1;
+                          Navigator.pop(context);
+                        });
                       },
                       child: Text(
                         'Add Cart',
@@ -321,7 +321,10 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
                       ),
                     ),
                     TextButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () {
+                        amountCount = 1;
+                        Navigator.pop(context);
+                      },
                       child: Text(
                         'Cancel',
                         style: MyConstant().h2RedStyle(),
