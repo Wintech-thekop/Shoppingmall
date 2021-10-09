@@ -4,8 +4,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shoppingmall/models/product_model.dart';
+import 'package:shoppingmall/models/sqlite_model.dart';
 import 'package:shoppingmall/models/user_model.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
+import 'package:shoppingmall/utility/sqlite_helper.dart';
 import 'package:shoppingmall/widgets/show_image.dart';
 import 'package:shoppingmall/widgets/show_progress.dart';
 import 'package:shoppingmall/widgets/show_title.dart';
@@ -96,7 +98,7 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
         itemBuilder: (context, index) => GestureDetector(
           onTap: () {
             showAlertDialog(productModels[index], listImages[index]);
- //           amountCount = 1;
+            //           amountCount = 1;
           },
           child: Card(
             child: Row(
@@ -253,67 +255,85 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                amountAddRemove(setState),
-                addCartOrCancel(context),
+                //  amountAddRemove(setState),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        if (amountCount >= 2) {
+                          setState(() {
+                            amountCount--;
+                          });
+                        }
+                      },
+                      icon: Icon(Icons.remove_circle_outline),
+                      color: MyConstant.dark,
+                    ),
+                    ShowTitle(
+                      title: amountCount.toString(),
+                      textStyle: MyConstant().h1Style(),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          amountCount++;
+                        });
+                      },
+                      icon: Icon(Icons.add_circle_outline),
+                      color: MyConstant.dark,
+                    ),
+                  ],
+                ),
+                //addCartOrCancel(context),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    TextButton(
+                      onPressed: () async {
+                        //       Navigator.pop(context);
+                        String idSeller = userModel!.id;
+                        String idProduct = productModel.id;
+                        String name = productModel.name;
+                        String price = productModel.price;
+                        String amount = amountCount.toString();
+                        String sum =
+                            (int.parse(price) * amountCount).toString();
+                        print(
+                            ' IdSeller ==> $idSeller , IdProduct ==> $idProduct , Name ==> $name , Price ==> $price , Amount ==> $amount , sum ==> $sum');
+                        SQLiteModel sqLiteModel = SQLiteModel(
+                            idSeller: idSeller,
+                            idProduct: idProduct,
+                            name: name,
+                            price: price,
+                            amount: amount,
+                            sum: sum);
+                        await SQLiteHelper()
+                            .insertValueToSQLite(sqLiteModel)
+                            .then((value) {
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            });
+                      },
+                      child: Text(
+                        'Add Cart',
+                        style: MyConstant().h2GreenStyle(),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text(
+                        'Cancel',
+                        style: MyConstant().h2RedStyle(),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ],
         ),
       ),
-    );
-  }
-
-  Row addCartOrCancel(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text(
-            'Add Cart',
-            style: MyConstant().h2GreenStyle(),
-          ),
-        ),
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text(
-            'Cancel',
-            style: MyConstant().h2RedStyle(),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Row amountAddRemove(StateSetter setState) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        IconButton(
-          onPressed: () {
-            if (amountCount >= 2) {
-              setState(() {
-                amountCount--;
-              });
-            }
-          },
-          icon: Icon(Icons.remove_circle_outline),
-          color: MyConstant.dark,
-        ),
-        ShowTitle(
-          title: amountCount.toString(),
-          textStyle: MyConstant().h1Style(),
-        ),
-        IconButton(
-          onPressed: () {
-            setState(() {
-              amountCount++;
-            });
-          },
-          icon: Icon(Icons.add_circle_outline),
-          color: MyConstant.dark,
-        ),
-      ],
     );
   }
 

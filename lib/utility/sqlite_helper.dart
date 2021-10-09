@@ -18,7 +18,7 @@ class SQLiteHelper {
     initialDatabase();
   }
 
-    Future<Null> initialDatabase() async {
+  Future<Null> initialDatabase() async {
     await openDatabase(
       join(await getDatabasesPath(), nameDatabase),
       onCreate: (db, version) => db.execute(
@@ -43,5 +43,12 @@ class SQLiteHelper {
       results.add(model);
     }
     return results;
+  }
+
+  Future<void> insertValueToSQLite(SQLiteModel sqLitemodel) async {
+    Database database = await connectDatabase();
+    await database.insert(tableDatabase, sqLitemodel.toMap()).then(
+          (value) => print('Insert value name ==> ${sqLitemodel.name}'),
+        );
   }
 }
